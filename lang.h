@@ -21,6 +21,7 @@ private:
 
 public:
     Language(const std::vector<Token>& tokens);
+    Language();
     std::vector<Token> Lex(const std::string& code);
     std::vector<Token> Parse(const std::vector<Token>& tokens);
 };
