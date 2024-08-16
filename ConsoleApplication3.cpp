@@ -3,9 +3,8 @@
 #include "lang.h"
 #include <vector>
 
-int main()
+void checkTokens(std::string code)
 {
-    std::string code = "int x = 10 * 10;";
     Language language;
     std::vector<Token> tokens = language.Lex(code);
     std::cout << "tokens : " << std::endl;
@@ -61,6 +60,34 @@ int main()
         std::cout << "\nvalue : " << token.value << std::endl;
         std::cout << std::endl;
     }
+}
+
+
+int main()
+{
+
+    std::string code = "int x = 42;";
+
+    Language language;
+
+    std::vector<Token> tokens = language.Lex(code);
+
+    std::cout << "Tokens :" << std::endl;
+    for (const auto& token : tokens) {
+        std::cout << "Type : " << static_cast<int>(token.type) << ", Value : " << token.value << std::endl;
+    }
+
+    std::unique_ptr<ASTNode> ast = language.ParseAST(tokens); 
+
+    if (ast) {
+        std::cout << "AST generated" << std::endl;
+    }
+    else {
+        std::cout << "failed to generate AST" << std::endl;
+    }
+
+    checkTokens(code);
+
     return 0;
 }
 
