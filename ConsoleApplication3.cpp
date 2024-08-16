@@ -2,6 +2,7 @@
 #include <windows.h>
 #include "lang.h"
 #include <vector>
+#include "Context.h"
 
 void checkTokens(std::string code)
 {
@@ -63,32 +64,22 @@ void checkTokens(std::string code)
 }
 
 
-int main()
-{
-
+int main() {
     std::string code = "int x = 42;";
-
+    Context context;
     Language language;
-
     std::vector<Token> tokens = language.Lex(code);
+    std::unique_ptr<ASTNode> ast = language.ParseAST(tokens);
 
-    std::cout << "Tokens :" << std::endl;
-    for (const auto& token : tokens) {
-        std::cout << "Type : " << static_cast<int>(token.type) << ", Value : " << token.value << std::endl;
+    if (ast)
+    {
+        int result = ast->interpret(context);
+        std::cout << "result : " << result << std::endl;
     }
-
-    std::unique_ptr<ASTNode> ast = language.ParseAST(tokens); 
-
-    if (ast) {
-        std::cout << "AST generated" << std::endl;
-    }
-    else {
+    else
+    {
         std::cout << "failed to generate AST" << std::endl;
     }
 
-    checkTokens(code);
-
     return 0;
 }
-
-
