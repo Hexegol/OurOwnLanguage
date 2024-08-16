@@ -108,34 +108,41 @@ std::vector<Token> Language::Parse(const std::vector<Token>& tokens)
 std::unique_ptr<ASTNode> Language::ParseAST(const std::vector<Token>& tokens) {
 	std::unique_ptr<ASTNode> root = nullptr;
 	for (size_t i = 0; i < tokens.size();) {
-		if (tokens[i].type == TokenType::Keyword && tokens[i].value == "int") {
-			if (i + 1 < tokens.size() && tokens[i + 1].type == TokenType::Identifier) {
+		if (tokens[i].type == TokenType::Keyword && tokens[i].value == "int") 
+		{
+			if (i + 1 < tokens.size() && tokens[i + 1].type == TokenType::Identifier)
+			{
 				auto idNode = std::make_unique<IdentifierNode>(tokens[i + 1].value);
 
-				if (i + 2 < tokens.size() && tokens[i + 2].type == TokenType::Operator && tokens[i + 2].value == "=") {
-					if (i + 3 < tokens.size() && tokens[i + 3].type == TokenType::Number) {
+				if (i + 2 < tokens.size() && tokens[i + 2].type == TokenType::Operator && tokens[i + 2].value == "=")
+				{
+					if (i + 3 < tokens.size() && tokens[i + 3].type == TokenType::Number)
+					{
 						auto numNode = std::make_unique<NumberNode>(std::stoi(tokens[i + 3].value));
 						auto assignNode = std::make_unique<BinaryOpNode>("=", std::move(idNode), std::move(numNode));
-
 						root = std::make_unique<VariableDeclNode>("int", std::move(assignNode));
 						i += 4;  
 					}
-					else {
+					else 
+					{
 						std::cerr << "syntax error : waited expression after '='." << std::endl;
-						break;
+						return nullptr;
 					}
 				}
-				else {
+				else 
+				{
 					std::cerr << "syntax error : '=' waited after identificator" << std::endl;
-					break;
+					return nullptr;
 				}
 			}
-			else {
+			else 
+			{
 				std::cerr << "syntax error : identificator waited after keyword 'int'" << std::endl;
-				break;
+				return nullptr;
 			}
 		}
-		else {
+		else 
+		{
 			i++;
 		}
 	}
